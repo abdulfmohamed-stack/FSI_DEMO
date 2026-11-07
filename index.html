@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>SX Compliance Workbench</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +20,7 @@
   --good: #16865a; --good-soft: #def4ea;
   --warn: #b26a00; --warn-soft: #fdf0d9;
   --crit: #c2342b; --crit-soft: #fde6e4;
+  --sx: #0b8a80; --sx-soft: #daf3f0;
   --banner: #fff6db; --banner-ink: #6b4a00;
   --code-bg: #f3f7fc;
   --hero-a: #3f86da; --hero-b: #74b4f2; --hero-ink: #ffffff; --hero-glass: rgba(255,255,255,.16); --hero-line: rgba(255,255,255,.35);
@@ -34,7 +34,7 @@
     --sky: #6fb0f0; --sky-deep: #9cc9f6; --sky-pale: #132a48; --ground: #091527; --panel: #10213a;
     --ink: #e6eef9; --ink-2: #a8bad3; --ink-3: #7b8fac; --rule: #223a5c; --rule-2: #172b47;
     --accent: #7ab7f3; --accent-soft: #16325a; --good: #5cc995; --good-soft: #10301f; --warn: #eaa84a; --warn-soft: #33270f;
-    --crit: #f0857b; --crit-soft: #3a1b19; --banner: #2f2610; --banner-ink: #f1d48a; --code-bg: #0c1a2f;
+    --crit: #f0857b; --crit-soft: #3a1b19; --sx: #45cbbd; --sx-soft: #0f3330; --banner: #2f2610; --banner-ink: #f1d48a; --code-bg: #0c1a2f;
     --hero-a: #17457f; --hero-b: #2c6db7; --hero-glass: rgba(255,255,255,.08); --hero-line: rgba(255,255,255,.22);
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
     color-scheme: dark;
@@ -44,7 +44,7 @@
   --sky: #6fb0f0; --sky-deep: #9cc9f6; --sky-pale: #132a48; --ground: #091527; --panel: #10213a;
   --ink: #e6eef9; --ink-2: #a8bad3; --ink-3: #7b8fac; --rule: #223a5c; --rule-2: #172b47;
   --accent: #7ab7f3; --accent-soft: #16325a; --good: #5cc995; --good-soft: #10301f; --warn: #eaa84a; --warn-soft: #33270f;
-  --crit: #f0857b; --crit-soft: #3a1b19; --banner: #2f2610; --banner-ink: #f1d48a; --code-bg: #0c1a2f;
+  --crit: #f0857b; --crit-soft: #3a1b19; --sx: #45cbbd; --sx-soft: #0f3330; --banner: #2f2610; --banner-ink: #f1d48a; --code-bg: #0c1a2f;
   --hero-a: #17457f; --hero-b: #2c6db7; --hero-glass: rgba(255,255,255,.08); --hero-line: rgba(255,255,255,.22);
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
   color-scheme: dark;
@@ -160,6 +160,13 @@ td.mono { white-space: nowrap; }
 .pill.good { background: var(--good-soft); color: var(--good); }
 .pill.info { background: var(--accent-soft); color: var(--accent); }
 .pill.neutral { background: var(--rule-2); color: var(--ink-2); }
+.pill.sx { background: var(--sx-soft); color: var(--sx); }
+.band { border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.band-head { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+.band-head i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.band-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+.band-grid.three { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.ccard { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .score { display: inline-flex; align-items: center; gap: 8px; }
 .score .track { width: 54px; height: 6px; border-radius: 3px; background: var(--rule-2); overflow: hidden; }
 .score .track span { display: block; height: 100%; }
@@ -271,6 +278,7 @@ pre.xml { background: var(--code-bg); border: 1px solid var(--rule); border-radi
           <button id="role-analyst" aria-pressed="true">Analyst</button>
           <button id="role-mlro" aria-pressed="false">MLRO</button>
         </div>
+        <button class="btn" id="toggle-core" aria-pressed="true">Presentation path</button>
         <button class="btn" id="toggle-notes" aria-pressed="false">Presenter notes</button>
         <button class="btn" id="reset-demo">Reset</button>
       </div>
@@ -282,7 +290,7 @@ pre.xml { background: var(--code-bg); border: 1px solid var(--rule); border-radi
         <p>How a Somali institution detects, investigates, decides, reports and proves its financial crime controls &mdash; with BPC SmartVista as the platform, AI as the analyst&rsquo;s assistant and the FRC&rsquo;s goAML as the destination.</p>
         <div class="hero-cta">
           <button class="btn-hero" id="start-tour"><svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true" fill="currentColor"><path d="M1 0L9 5L1 10z"/></svg>Start guided tour</button>
-          <button class="btn-hero ghost" id="jump-case">Open the main case</button>
+          <button class="btn-hero ghost" id="jump-case">Follow a $500 remittance</button>
         </div>
       </div>
       <div class="kpis" id="hero-kpis"></div>
@@ -297,8 +305,8 @@ pre.xml { background: var(--code-bg); border: 1px solid var(--rule); border-radi
         <div class="chips" id="chips-b"></div>
       </div>
       <div class="meter">
-        <div class="label">Contributions shown</div>
-        <div class="big num" id="meter-n">0 / 11</div>
+        <div class="label">Objectives shown</div>
+        <div class="big num" id="meter-n">0 / 5</div>
         <div class="bar"><span id="meter-bar"></span></div>
       </div>
     </section>
@@ -552,7 +560,7 @@ const D = buildDataset();
 const RULES = [
   { id: 'R1', name: 'Rapid distribution after remittance', typ: 'Pass-through to multiple wallets', nra: 'TF and informal value transfer', approved: 'Oct 2, 2026' },
   { id: 'R2', name: 'Activity above expected profile', typ: 'Unexplained change in behaviour', nra: 'Weak CDD and profiling', approved: 'Oct 2, 2026' },
-  { id: 'R3', name: 'Cash deposits just under threshold', typ: 'Structuring', nra: 'Cash-based economy', approved: 'Oct 2, 2026' },
+  { id: 'R3', name: 'Repeated deposits just under a limit', typ: 'Structuring', nra: 'Cash-based economy', approved: 'Oct 2, 2026' },
   { id: 'R4', name: 'Collection hub wallet', typ: 'Many unrelated senders to one wallet', nra: 'TF collection and extortion payments', approved: 'Oct 2, 2026' },
   { id: 'R6', name: 'Watchlist screening at onboarding', typ: 'Sanctions exposure', nra: 'UN and national targeted sanctions', approved: 'Oct 2, 2026' },
   { id: 'R7', name: 'Unverified identity, high value', typ: 'Identity risk', nra: 'Weak customer identification', approved: 'Oct 2, 2026' },
@@ -582,28 +590,34 @@ const AI_NOTES = {
 };
 
 const MODULES = [
+  { core: true, id: 'obj1', label: '1 \u00b7 Monitor and identify unusual activity', obj: 'A' },
+  { core: true, id: 'obj2', label: '2 \u00b7 AI helps officers investigate', obj: 'A' },
+  { core: true, id: 'obj3', label: '3 \u00b7 Prepare FRC/goAML reporting', obj: 'A' },
+  { core: true, id: 'obj4', label: '4 \u00b7 Investigation records and human approval', obj: 'B' },
+  { core: true, id: 'obj5', label: '5 \u00b7 Evidence of controls for correspondent banks', obj: 'B' },
   { id: 'platform', label: 'Know what your platform covers', obj: 'A' },
-  { id: 'detect', label: 'Detect with Somali typologies', obj: 'A' },
   { id: 'explain', label: 'Explain every alert', obj: 'A' },
-  { id: 'decide', label: 'Human decision with reason', obj: 'A' },
   { id: 'screen', label: 'Screen Somali name variants', obj: 'A' },
-  { id: 'report', label: 'Report to FRC via goAML', obj: 'A' },
+  { id: 'report', label: 'goAML report draft', obj: 'A' },
   { id: 'usd', label: 'Payment transparency for USD', obj: 'B' },
-  { id: 'rfi', label: 'Answer correspondent requests', obj: 'B' },
-  { id: 'audit', label: 'Audit trail and four-eyes', obj: 'B' },
   { id: 'evidence', label: 'Effectiveness statistics', obj: 'B' },
   { id: 'pack', label: 'Correspondent evidence pack', obj: 'B' },
 ];
 const TABS = [
-  { id: 'platform', n: '1', label: 'Platform' },
-  { id: 'monitor', n: '2', label: 'Monitor' },
-  { id: 'investigate', n: '3', label: 'Investigate' },
-  { id: 'screen', n: '4', label: 'Screen' },
-  { id: 'report', n: '5', label: 'goAML \u00b7 FRC' },
-  { id: 'usd', n: '6', label: 'USD correspondent' },
-  { id: 'evidence', n: '7', label: 'Evidence' },
-  { id: 'readiness', n: '8', label: 'Readiness' },
-  { id: 'forward', n: '9', label: 'Way forward' },
+  { core: true, id: 'journey', label: 'Detect' },
+  { core: true, id: 'ai', label: 'AI investigation' },
+  { core: true, id: 'frc', label: 'goAML \u00b7 FRC' },
+  { core: true, id: 'controls', label: 'Effective controls' },
+  { core: true, id: 'rfi', label: 'USD correspondent' },
+  { core: true, id: 'forward', label: 'Close' },
+  { id: 'platform', label: 'Platform' },
+  { id: 'monitor', label: 'Monitor' },
+  { id: 'investigate', label: 'Alert queue case' },
+  { id: 'screen', label: 'Screen' },
+  { id: 'report', label: 'goAML draft' },
+  { id: 'usd', label: 'USD payments' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'readiness', label: 'Readiness' },
 ];
 const NOTES = {
   platform: ['Start here: SmartVista already runs Somalia’s national instant payment system, and BPC extended its fraud management to it.', 'BPC publishes real AML-relevant capability in its Fraud Management module: monitoring, link analysis, profiling, watchlists and case management.', 'Be exact: the module is available to us and the goAML link can be built through BPC’s integration platform, but neither is deployed yet. BPC has confirmed we can access our own data.', 'So an institution has two paths: license the platform’s module, or run an independent layer like the one in this demo. Either way, reasons, four-eyes, goAML and evidence remain the institution’s job.'],
@@ -612,6 +626,11 @@ const NOTES = {
   screen: ['Exact matching misses “Maxamuud Cabdikariim Dhoore”. Spelling-aware matching catches it.', 'Show the normalisation steps: x→h, c dropped, dh→d, doubled letters collapsed.', 'Try “Mohamed Abdi Warsame” to show a weaker partial match: good screening also needs a human to clear false hits.'],
   report: ['Only an MLRO-approved case can become a report. The draft follows the general goAML structure.', 'The completeness check catches missing fields before submission, so the FRC receives better intelligence.', 'We do not claim integration. Submission is through the FRC’s authorised channel.'],
   evidence: ['These figures come from what you just did in the demo, not from a slide.', 'The evidence pack answers typical correspondent due-diligence questions with proof, and redacts personal data.', 'This is the same evidence MENAFATF’s effectiveness stage will want.'],
+  journey: ['Item 1. Imagine a customer receives $500 from a family member in the US; SmartVista records it in her SX wallet.', 'Normal: groceries, school fees, electricity. Unusual: $495 to four new counterparties in 20 minutes raises an alert, which is a reason to investigate, not proof of crime.', 'SmartVista records; a separate monitoring layer evaluates risk. The same principle applies to any bank\u2019s core platform.', 'Teal is SomNexus\u2019s own platform: present the launch scenario, then click \u201cToday\u2019s status\u201d.'],
+  ai: ['Item 2. Monitoring found the pattern; the AI assembles the case from records we are authorised to access.', 'Click through the five findings and end on the last: what is missing. A trustworthy AI flags gaps instead of inventing facts.', 'Record a decision with a rationale. The AI cannot decide, approve or file anything.', 'Gains in speed and consistency must be tested, not assumed.'],
+  frc: ['Item 3. Not every alert becomes an STR.', 'Click \u201cMore investigation needed\u201d first, then \u201cReport is required\u201d: AI supports judgement but cannot replace it.', 'Walk the six goAML steps; submission and acknowledgment belong to the reporting entity and the FRC.', 'Responsibility table: who reports for SX wallet activity is being confirmed with the FRC and our sponsor bank. STRs never go into correspondent evidence.'],
+  controls: ['Item 3. Correspondents and MENAFATF assessors ask: show us the controls work.', 'Case record: every action timestamped and attributed, a reason for every decision, four-eyes, and the AI made no decision.', 'Monthly statistics prove controls run every day; rule approvals and the change log prove they are governed.', 'Correspondents get aggregate evidence and governance documents, never STR details.'],
+  rfi: ['Item 4 connects to the event\u2019s core theme: access to US dollar payments.', 'This is a bank-level example; SX wallet does not process a $45,000 payment.', 'Prepare with three documents: the draft is blocked and lists what is missing. Tick the rest, prepare again, approve.', 'Close: AI cannot guarantee correspondent access; it can make controls transparent and documented.'],
   usd: ['This is the event\u2019s core question: why would a US bank keep processing Somali dollar payments?', 'Two things lower the correspondent\u2019s cost: complete sender and recipient details on every payment (FATF Recommendation 16), and fast, documented answers to their questions.', 'Point to the red rows: these are the payments a correspondent would query or reject.', 'The response is built from records the bank already holds. It never mentions whether an STR was filed: that would breach reporting confidentiality.'],
   forward: ['Close here. Three routes, one standard: whatever the technology, the institution owns the reasons, the decision, the report and the evidence.', 'AI investigation agents already work alongside existing monitoring through standard integration; FIS with Anthropic is one example. The same pattern can sit on any platform, including SmartVista.', 'A shared service could make this affordable for smaller institutions, but only with neutral governance, a legal basis for data and CBS approval. Donors proposed a similar idea in 2015.', 'Ask FSI and the FRC which route they want the session to emphasise.'],
   readiness: ['A self-assessment any bank can use tomorrow, whatever its platform.', 'Question 1 is our own lesson: confirm you can extract your own data before you sign a platform contract.'],
@@ -619,9 +638,9 @@ const NOTES = {
 
 // ---------- State ----------
 const S = {
-  P: { ...DEFAULT_P }, role: 'analyst', tab: 'platform', notes: false,
+  P: { ...DEFAULT_P }, role: 'analyst', tab: 'journey', notes: false,
   alerts: [], lctr: [], sel: null, done: new Set(), status: {}, log: [], drafts: {}, packGenerated: false,
-  screenName: 'Maxamuud Cabdikariim Dhoore', screenRun: false, readiness: {}, monitorRun: false, rfiApproved: {}, rfiSel: null,
+  screenName: 'Maxamuud Cabdikariim Dhoore', screenRun: false, readiness: {}, monitorRun: false, rfiApproved: {}, rfiSel: null, journeyMode: 'normal', journeyView: 'launch', core: true, findSel: 0, aiDecision: null, aiPick: null, aiRationale: null, frcStep: null, rfiDocs: null, rfiPrepared: null, rfiOk: false,
 };
 const NAMES = { analyst: 'Analyst (Hodan A., demo)', mlro: 'MLRO (Abdullahi W., demo)' };
 function rerun(){ const r = runRules(D, S.P); S.alerts = r.alerts; S.lctr = r.lctr; if (!S.alerts.find(a => a.id === S.sel)) S.sel = S.alerts.length ? S.alerts[0].id : null; }
@@ -640,16 +659,17 @@ function statusPill(st){ const m = { open: ['Open', 'neutral'], info: ['Informat
 
 // ---------- Lens ----------
 function renderLens(){
+  const mods = MODULES.filter(m => !S.core || m.core);
   ['A', 'B'].forEach(o => {
-    $('#chips-' + o.toLowerCase()).innerHTML = MODULES.filter(m => m.obj === o).map(m => `<span class="chip ${S.done.has(m.id) ? 'done' : ''}"><span class="dot"></span>${m.label}</span>`).join('');
+    $('#chips-' + o.toLowerCase()).innerHTML = mods.filter(m => m.obj === o).map(m => `<span class="chip ${S.done.has(m.id) ? 'done' : ''}"><span class="dot"></span>${m.label}</span>`).join('');
   });
-  const n = S.done.size; $('#meter-n').textContent = `${n} / ${MODULES.length}`; $('#meter-bar').style.width = (n / MODULES.length * 100) + '%';
+  const n = mods.filter(m => S.done.has(m.id)).length; $('#meter-n').textContent = `${n} / ${mods.length}`; $('#meter-bar').style.width = (n / mods.length * 100) + '%';
 }
 
 // ---------- Tabs ----------
-function tabDone(id){ return { usd: S.done.has('rfi'), platform: S.done.has('platform'), monitor: S.done.has('detect'), investigate: S.done.has('decide'), screen: S.done.has('screen'), report: S.done.has('report'), evidence: S.done.has('pack'), readiness: Object.keys(S.readiness).length === 12, forward: !!S.seenForward }[id]; }
+function tabDone(id){ return { controls: S.done.has('controls'), ai: S.done.has('decide'), frc: S.done.has('frc'), rfi: S.done.has('rfi'), journey: S.done.has('journey'), usd: S.done.has('rfi'), platform: S.done.has('platform'), monitor: S.done.has('detect'), investigate: S.done.has('decide'), screen: S.done.has('screen'), report: S.done.has('report'), evidence: S.done.has('pack'), readiness: Object.keys(S.readiness).length === 12, forward: !!S.seenForward }[id]; }
 function renderTabs(){
-  $('#tabs').innerHTML = TABS.map(t => `<button role="tab" id="tab-${t.id}" aria-selected="${S.tab === t.id}" data-tab="${t.id}"><span class="step">${t.n}</span>${t.label}${tabDone(t.id) ? '<span class="tick" aria-label="done">✓</span>' : ''}</button>`).join('');
+  $('#tabs').innerHTML = TABS.filter(t => !S.core || t.core).map((t, i) => `<button role="tab" id="tab-${t.id}" aria-selected="${S.tab === t.id}" data-tab="${t.id}"><span class="step">${i + 1}</span>${t.label}${tabDone(t.id) ? '<span class="tick" aria-label="done">✓</span>' : ''}</button>`).join('');
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { S.tab = b.dataset.tab; render(); });
 }
 function notesBlock(){ if (!S.notes) return ''; return `<div class="notes"><span class="label">Presenter notes</span><ul>${NOTES[S.tab].map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>`; }
@@ -1051,22 +1071,423 @@ function bindReport(){
   const cp = $('#copy-xml'); if (cp) cp.onclick = () => { const text = $('#xml').innerText; navigator.clipboard.writeText(text).then(() => toast('XML copied'), () => { const r = document.createRange(); r.selectNodeContents($('#xml')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast('Selected. Press Ctrl+C to copy.'); }); };
 }
 
+// ---------- Presentation items 1-4 ----------
+const goNext = (tab) => { S.tab = tab; render(); window.scrollTo({ top: $('#tabs').offsetTop - 4, behavior: 'smooth' }); };
+const needsBox = (title, rows, head2) => `<details class="panel" style="padding:12px 16px"><summary style="cursor:pointer;font-weight:600">${esc(title)}</summary><div class="tscroll" style="margin-top:10px"><table><thead><tr><th>Requirement</th><th>${esc(head2)}</th></tr></thead><tbody>${rows.map(([a, b]) => `<tr><td>${esc(a)}</td><td class="muted">${esc(b)}</td></tr>`).join('')}</tbody></table></div></details>`;
+const itemHead = (n, title, sub, color) => `<section class="panel" style="border-top:4px solid ${color}"><span class="label">Item ${n} of 4</span><h2 style="font-size:24px;margin-top:4px">${esc(title)}</h2><p class="muted" style="margin:6px 0 0;max-width:80ch">${esc(sub)}</p></section>`;
+
+const CASE = 'SX-2026-0042';
+function ensureCaseLogs(stage){
+  if (!S.loggedAlert) { log('Monitoring system', 'Alert raised \u00b7 ' + CASE + ' \u00b7 score 80', '$495 of a $500 remittance moved to four new counterparties within 20 minutes.', CASE); S.loggedAlert = true; }
+  if (stage >= 2 && !S.loggedAi) { log('AI assistant (no decision rights)', 'Draft investigation summary prepared', 'Five sourced findings; transfer purpose and recipient relationships flagged as missing evidence.', CASE); S.loggedAi = true; }
+}
+// ===== Item 1: Detect =====
+const JOURNEY = {
+  normal: { rows: [
+    ['Oct 27, 09:40', 'Incoming remittance', 'Licensed US remittance provider', 500],
+    ['Oct 27, 12:15', 'Merchant payment', 'Bakaaro Grocery (M-01)', -120],
+    ['Oct 28, 09:05', 'Merchant payment', 'Taleex School Fees (M-07)', -80],
+    ['Oct 28, 18:30', 'Bill payment', 'Banadir Electricity', -50],
+  ], out1h: 0, score: 0, verdict: ['Routine monitoring', 'good', 'Groceries, school fees and electricity match everyday purposes and the customer’s usual activity (about $250 a month). No unusual pattern is established by these facts.'], reasons: [] },
+  unusual: { rows: [
+    ['Oct 27, 10:02', 'Incoming remittance', 'Licensed US remittance provider', 500],
+    ['Oct 27, 10:05', 'Transfer to new wallet A', 'WAL-0511 · first payment ever', -120],
+    ['Oct 27, 10:09', 'Transfer to new wallet B', 'WAL-0528 · first payment ever', -125],
+    ['Oct 27, 10:14', 'Transfer to new wallet C', 'WAL-0533 · first payment ever', -125],
+    ['Oct 27, 10:22', 'Cash-out via new agent', 'Agent AG-17, Beledweyne', -125],
+  ], out1h: 99, score: 80, verdict: ['Alert raised for review', 'crit', 'Within 20 minutes, $495 of the $500 went to four counterparties the customer had never used. This justifies review. It is not proof of financial crime.'], reasons: [
+    [40, '$495 of the $500 (99%) moved out within 20 minutes'],
+    [20, 'Three wallet beneficiaries never paid before'],
+    [10, 'Cash-out through an agent never used before'],
+    [10, 'Pattern differs from six months of history (groceries, school fees)'],
+  ] },
+};
+function viewJourney(){
+  const mode = S.journeyMode || 'normal', J = JOURNEY[mode];
+  let bal = 0;
+  const launch = (S.journeyView || 'launch') === 'launch';
+  const SXC = [
+    ['Remittance provider connection', 'Payout API: validate the recipient, receive the instruction, confirm the credit', 'Partner selection by mid-November'],
+    ['NIRA identity', 'Recipient verified against the national ID at onboarding', 'NIRA-only policy set; integration in build'],
+    ['SomNexus', 'Registered PSP operating SX wallet under a Somali sponsor bank', 'Registered PSP, operating under a sponsor bank'],
+    ['SX wallet', 'Individual wallets, up to $3,000 per transaction', 'In build'],
+    ['BPC SmartVista', 'Wallet ledger, limits, transaction history and data access', 'Contracted; build in progress'],
+    ['Sponsor bank', 'USD settlement account, prefunding and daily reconciliation', 'Settlement arrangement to agree'],
+  ];
+  const CTL = [['Monitoring', 'Item 1: rules on SmartVista data'], ['AI investigation', 'Item 2: evidence gathered for the analyst'], ['Human decision', 'Items 2–3: written reasons, four-eyes'], ['goAML report', 'Item 3: report to the FRC when required'], ['Correspondent response', 'Item 4: documented answers to RFIs']];
+  const EXT = [['Sender in the US', 'Pays through a licensed provider'], ['Remittance provider', 'Sender ID, sanctions screening, purpose'], ['FRC', 'Receives reports through goAML'], ['Correspondent bank', 'Processes USD; asks questions']];
+  const card = (t, d, pill, cls, edge) => `<div class="ccard" style="border-color:${edge}"><strong>${esc(t)}</strong><span class="small muted">${esc(d)}</span><span class="pill ${cls}" style="align-self:flex-start;margin-top:2px;white-space:normal">${esc(pill)}</span></div>`;
+  return `${notesBlock()}
+  <section class="panel" style="border-top:4px solid var(--sx)">
+    <div class="panel-head"><div><span class="label">Item 1 of 4 · How technology identifies financial crime risk</span><h2 style="font-size:24px;margin-top:4px">A $500 remittance from the US to a NIRA-verified SX wallet</h2></div>
+      <div class="seg" role="group" aria-label="Status view"><button id="jv-launch" aria-pressed="${launch}">Launch scenario</button><button id="jv-today" aria-pressed="${!launch}">Today’s status</button></div></div>
+    <p class="muted" style="margin:0 0 12px;max-width:80ch">SmartVista records and processes wallet activity. A separately configured monitoring layer evaluates financial crime indicators. The same principle applies to any Somali bank’s core banking platform.</p>
+    <div class="legend" style="margin:0 0 10px"><span><i style="background:var(--sx)"></i>SomNexus platform and integrations</span><span><i style="background:var(--sky)"></i>Financial crime controls (Items 1–4)</span><span><i style="background:var(--ink-3)"></i>External parties</span></div>
+    <div class="band" style="background:var(--sx-soft)"><div class="band-head" style="color:var(--sx)"><i style="background:var(--sx)"></i>SomNexus platform and integrations · ${launch ? 'launch scenario' : 'today’s status'}</div>
+      <div class="band-grid three">${SXC.map(([t, d, today], i) => card(t, d, launch ? (i === 2 ? 'Operating' : 'Integrated') : today, launch || i === 2 ? 'sx' : 'warn', launch ? 'var(--sx)' : 'var(--rule)')).join('')}</div></div>
+    <div class="band" style="background:var(--sky-pale);margin-top:10px"><div class="band-head" style="color:var(--sky-deep)"><i style="background:var(--sky)"></i>Financial crime controls · shown today on synthetic data</div>
+      <div class="band-grid">${CTL.map(([t, d]) => card(t, d, 'Demonstrated', 'info', 'var(--rule)')).join('')}</div></div>
+    <div class="band" style="background:var(--rule-2);margin-top:10px"><div class="band-head" style="color:var(--ink-2)"><i style="background:var(--ink-3)"></i>External parties</div>
+      <div class="band-grid">${EXT.map(([t, d]) => card(t, d, 'Partner side', 'neutral', 'var(--rule)')).join('')}</div></div>
+    <p class="hint" style="margin:10px 0 0">${launch ? '<strong>Launch scenario:</strong> SomNexus-side integrations are shown as completed. Switch to “Today’s status” for where each stands now. ' : ''}No remittance provider has signed yet. Controls are demonstrated on synthetic data.</p>
+  </section>
+  <div class="grid-main">
+    <section class="panel">
+      <div class="panel-head"><div><span class="label">Recipient: Amina H. N. · WAL-0420 · NIRA-verified · Banadir</span><h2>Two uses of the same $500</h2></div>
+        <div class="seg" role="group" aria-label="Scenario"><button id="jm-normal" aria-pressed="${mode === 'normal'}">Normal spending</button><button id="jm-unusual" aria-pressed="${mode === 'unusual'}">Unusual transfers</button></div></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Time (EAT)</th><th>Activity</th><th>Counterparty</th><th class="r">Amount</th><th class="r">Balance</th></tr></thead>
+        <tbody>${J.rows.map(([t, a, c, amt]) => { bal += amt; return `<tr><td class="mono">${t}</td><td>${a}</td><td>${esc(c)}</td><td class="r num" style="color:${amt > 0 ? 'var(--good)' : 'var(--ink)'}">${amt > 0 ? '+' : '−'}$${Math.abs(amt).toFixed(2)}</td><td class="r num">$${bal.toFixed(2)}</td></tr>`; }).join('')}</tbody>
+      </table></div>
+      <div style="margin-top:14px"><div class="small" style="display:flex;justify-content:space-between"><span>Share of the remittance moved out within one hour</span><strong class="num">${J.out1h}%</strong></div><div class="meter" style="text-align:left;min-width:0"><div class="bar"><span style="width:${J.out1h}%;background:${J.out1h > 50 ? 'var(--crit)' : 'var(--good)'}"></span></div></div></div>
+      <p class="hint" style="margin:10px 0 0">Fictional transactions. The monitoring logic is illustrative; no live SmartVista fraud engine or AI investigator is connected.</p>
+    </section>
+    <section class="panel">
+      <span class="label">Monitoring outcome</span>
+      <div class="verdict ${J.verdict[1]}" style="margin-top:8px;align-items:flex-start"><div><strong style="font-size:15px">${J.verdict[0]}</strong>${J.score ? ` <span class="mono">· score ${J.score}</span>` : ''}<div class="small" style="margin-top:4px">${J.verdict[2]}</div></div></div>
+      ${J.reasons.length ? `<h3 style="margin-top:14px">Why the alert fired</h3><ul class="reasons" style="margin-top:6px">${J.reasons.map(([w, t]) => `<li><span class="w">+${w}</span><span>${esc(t)}</span></li>`).join('')}</ul><button class="btn primary" id="go-item2" style="margin-top:12px">Item 2: AI investigates this alert →</button>` : `<h3 style="margin-top:14px">What SmartVista recorded</h3><ul class="checklist small" style="margin-top:8px"><li><span class="ok">✓</span><span>Located the recipient’s SX wallet</span></li><li><span class="ok">✓</span><span>Applied wallet limits and authorisation</span></li><li><span class="ok">✓</span><span>Recorded the $500 credit and new balance</span></li><li><span class="ok">✓</span><span>Created a transaction reference and audit history</span></li><li><span class="ok">✓</span><span>Processed the later payments</span></li></ul><p class="hint" style="margin-top:8px">Switch to “Unusual transfers” to see an alert.</p>`}
+    </section>
+  </div>
+  <div class="grid2">
+    <section class="panel">
+      <h2>What the technology would identify</h2>
+      <div class="tscroll" style="margin-top:10px"><table>
+        <thead><tr><th>Risk indicator</th><th>What investigators should verify</th></tr></thead>
+        <tbody>${[['Rapid movement of incoming funds', 'How quickly funds left after receipt'], ['Multiple new beneficiaries', 'Whether recipients have a legitimate relationship with the customer'], ['Most funds transferred out', 'Whether this fits the customer’s normal activity'], ['Cash-out through a new agent', 'Whether the agent and purpose are credible'], ['Atypical behaviour', 'Whether the pattern differs materially from history']].map(([a, b]) => `<tr><td><strong>${a}</strong></td><td class="muted">${b}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>
+    <section class="panel">
+      <h2>What SX wallet can and cannot see</h2>
+      <div class="grid2" style="margin-top:10px;gap:12px">
+        <div><span class="label" style="color:var(--good)">Visible to SomNexus</span><ul class="small" style="margin:6px 0 0;padding-left:18px"><li>Recipient’s verified NIRA identity</li><li>Sender name, country and purpose as sent in the payout instruction</li><li>All activity inside SX wallet</li><li>Its own screening and case records</li></ul></div>
+        <div><span class="label" style="color:var(--warn)">Not visible without agreements</span><ul class="small" style="margin:6px 0 0;padding-left:18px"><li>The sender’s full KYC held by the provider</li><li>The international settlement chain</li><li>Activity in other Somali wallets and banks</li></ul></div>
+      </div>
+      <p class="hint" style="margin-top:8px">Any data sharing must be negotiated, lawful and technically supported.</p>
+    </section>
+  </div>
+  ${needsBox('What SomNexus needs to make Item 1 operational', [['SX wallet on SmartVista', 'Contracted; implementation underway'], ['Recorded wallet transactions', 'Part of the contracted SmartVista capabilities'], ['Data feed to AML monitoring', 'Data access confirmed by BPC; feed to be built'], ['Configured AML monitoring rules', 'Designed; not yet operational'], ['Alerts on real transaction behaviour', 'Simulated in this demo'], ['Monitoring policies and procedures', 'To be agreed with the sponsor bank']], 'Current position')}`;
+}
+function bindJourney(){
+  mark('journey');
+  $('#jv-launch').onclick = () => { S.journeyView = 'launch'; render(); };
+  $('#jv-today').onclick = () => { S.journeyView = 'today'; render(); };
+  $('#jm-normal').onclick = () => { S.journeyMode = 'normal'; render(); };
+  $('#jm-unusual').onclick = () => { S.journeyMode = 'unusual'; ensureCaseLogs(1); mark('detect'); mark('obj1'); render(); };
+  const n = $('#go-item2'); if (n) n.onclick = () => goNext('ai');
+}
+
+// ===== Item 2: AI investigation =====
+const FINDINGS = [
+  { t: 'Rapid movement of incoming funds', st: ['Review', 'warn'], d: 'The customer received $500, then transferred or withdrew $495 within 20 minutes. That is 99% of the incoming value.', src: 'SmartVista ledger: TX-1001 to TX-1005', q: 'Why were the funds distributed immediately?' },
+  { t: 'Three previously unused beneficiaries', st: ['Review', 'warn'], d: 'WAL-0511, WAL-0528 and WAL-0533 had never received money from this customer in six months of history.', src: 'Wallet history, May–October 2026', q: 'What is the customer’s relationship with each recipient?' },
+  { t: 'New cash-out agent', st: ['Review', 'warn'], d: '$125 was cashed out at agent AG-17 in Beledweyne. The customer previously used only agent AG-03 in Banadir.', src: 'Agent records AG-03 and AG-17', q: 'Why a different agent and region on the same morning?' },
+  { t: 'Customer identity', st: ['Verified in scenario', 'good'], d: 'NIRA-verified at onboarding in March 2026. Expected activity about $250 a month, mostly from one sender in the US.', src: 'Onboarding file KYC-0420', q: 'None. Identity is not in question.' },
+  { t: 'Information missing from the investigation', st: ['Missing evidence', 'crit'], d: 'The records do not show the purpose of the transfers, the recipients’ relationship to the customer, or the sender’s full KYC held by the remittance provider. The AI must not fill these gaps by guessing.', src: 'Not available to SomNexus. Sender data only if the remittance partner lawfully shares it.', q: 'Ask the customer for the purpose; request sender information from the provider through the agreed channel.' },
+];
+const DECISIONS = { escalate: 'Escalate for additional investigation', monitor: 'Continue enhanced monitoring with documented rationale', close: 'Close alert after sufficient evidence-based review' };
+function viewAi(){
+  const fi = S.findSel || 0, F = FINDINGS[fi];
+  const rec = S.aiDecision;
+  const kpi = (v, k, c) => `<div class="stat" style="border-top-color:${c}"><span class="v">${v}</span><span class="k">${k}</span></div>`;
+  const ev = [['BPC SmartVista transaction records', 'Wallet credit, transfer IDs, amounts, timestamps, counterparties, authorisation results', 'Retrieved', 'good'], ['Customer identity and onboarding', 'NIRA status, customer risk profile, onboarding file', 'Retrieved', 'good'], ['Historical wallet activity', 'Six months of receipts, spending categories, usual recipients and agents', 'Retrieved', 'good'], ['Sender and payment-purpose information', 'Full sending-side KYC and the recipients’ relationships are not available', 'Incomplete', 'crit']];
+  return `${notesBlock()}
+  ${itemHead('2, part 1', 'How AI investigates the alert', 'Monitoring found the pattern. The AI gathers the evidence, explains it with sources, flags what is missing, and prepares a case. A person decides.', 'var(--sky)')}
+  <section class="panel">
+    <div class="panel-head"><div><span class="label">SX wallet · Financial crime monitoring</span><h2>Case SX-2026-0042</h2></div><span class="pill ${rec ? 'info' : 'warn'}">${rec ? 'Decision recorded' : 'Review required'}</span></div>
+    <div class="stats">${kpi('$500.00', 'Incoming remittance', 'var(--good)')}${kpi('$495.00', 'Transferred or withdrawn', 'var(--crit)')}${kpi('4', 'New counterparties', 'var(--warn)')}${kpi('$5.00', 'Remaining balance', 'var(--sky)')}</div>
+    <p class="small" style="margin:12px 0 0"><strong>Reason for alert:</strong> a newly received international remittance was rapidly distributed through three new wallet beneficiaries and a cash-out agent within 20 minutes.</p>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>AI gathers the evidence</h2><span class="muted small">Records the institution is authorised to access</span></div>
+    <div class="band-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">${ev.map(([t, d, s, c]) => `<div class="ccard"><strong>${t}</strong><span class="small muted">${d}</span><span class="pill ${c}" style="align-self:flex-start">${s}</span></div>`).join('')}</div>
+    <p class="hint" style="margin-top:8px">Evidence retrieval is a proposed capability. SomNexus has no operational AI access to SmartVista, NIRA or a remittance provider’s systems today.</p>
+  </section>
+  <div class="grid-main">
+    <section class="panel">
+      <div class="panel-head"><h2>AI investigation workspace</h2><span class="pill neutral">${FINDINGS.length} findings</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px">
+        <div style="display:flex;flex-direction:column;gap:6px">${FINDINGS.map((f, i) => `<button class="btn" data-find="${i}" style="text-align:left;display:flex;flex-direction:column;gap:4px;${i === fi ? 'border-color:var(--sky);background:var(--sky-pale)' : ''}"><strong style="font-size:13px">${esc(f.t)}</strong><span class="pill ${f.st[1]}" style="align-self:flex-start">${f.st[0]}</span></button>`).join('')}</div>
+        <div class="ccard" style="border-color:var(--sky)">
+          <strong style="font-size:16px">${esc(F.t)}</strong>
+          <p class="small" style="margin:4px 0 0">${esc(F.d)}</p>
+          <span class="label" style="margin-top:10px">Source reference</span><span class="mono small">${esc(F.src)}</span>
+          <span class="label" style="margin-top:10px">Follow-up question</span><span class="small">${esc(F.q)}</span>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">Predefined fictional findings, not a live AI model. Source references are illustrative.</p>
+    </section>
+    <section class="panel decision">
+      <h2>Human compliance decision</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">${Object.entries(DECISIONS).map(([k, l]) => `<label class="small" style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="radio" name="aidec" value="${k}" ${(S.aiPick || 'escalate') === k ? 'checked' : ''}> ${l}</label>`).join('')}</div>
+      <label class="label" for="ai-rat" style="display:block;margin-top:10px">Analyst rationale (required)</label>
+      <textarea id="ai-rat">${esc(S.aiRationale || 'Rapid distribution of incoming funds to new counterparties warrants further review. Relationship and payment-purpose evidence is incomplete.')}</textarea>
+      <div class="row"><button class="btn primary" id="ai-record">Record decision</button></div>
+      <div class="err" id="ai-err" hidden></div>
+      ${rec ? `<div class="verdict good" style="margin-top:10px"><div><strong>${esc(DECISIONS[rec])}</strong><div class="small">Recorded by ${esc(NAMES.analyst)}</div></div></div>` : ''}
+    </section>
+  </div>
+  <section class="ai">
+    <div class="ai-head"><h3>Draft investigation summary · SX-2026-0042</h3><span class="pill ${rec ? 'good' : 'warn'}">${rec ? 'Reviewed by analyst' : 'Not approved'}</span></div>
+    <div class="ai-body">
+      <div class="ai-sec facts-sec"><h4>Activity identified</h4><p style="margin:0">The customer received a $500 international remittance. Within 20 minutes, $495 went to three new wallet beneficiaries and a newly used cash-out agent.</p></div>
+      <div class="ai-sec hyp"><h4>Risk indicators</h4><p style="margin:0">Rapid movement of incoming funds, unfamiliar counterparties and an unusual cash-out pattern.</p></div>
+      <div class="ai-sec miss"><h4>Evidence limitations</h4><p style="margin:0">Available records do not establish the purpose of the transfers or the relationships between the customer and the recipients.</p></div>
+      <div class="ai-sec"><h4>AI recommendation</h4><p style="margin:0">Obtain further information and refer to a compliance investigator. Do not conclude that money laundering occurred based on these transactions alone.</p></div>
+      <div class="ai-sec"><h4>Required human action</h4><p style="margin:0">Review source records, assess the activity in context, decide on escalation, and separately determine whether reporting obligations apply.</p></div>
+    </div>
+    <div class="guard">The AI cannot approve a suspicious transaction report or submit one to the FRC.</div>
+  </section>
+  <section class="panel">
+    <h2>What AI adds to traditional monitoring</h2>
+    <div class="tscroll" style="margin-top:10px"><table>
+      <thead><tr><th>Traditional monitoring</th><th>AI-assisted investigation</th></tr></thead>
+      <tbody>${[['Identifies unusual activity from rules or models', 'Collects and organises the relevant evidence'], ['Generates an alert', 'Explains the pattern and cites source transactions'], ['Investigator searches several systems', 'Investigator receives one reviewable case'], ['Analyst writes the summary by hand', 'AI drafts a summary for human checking'], ['Missing information found manually', 'Evidence gaps flagged systematically'], ['Human decides', '<strong>Human still decides</strong>']].map(([a, b]) => `<tr><td class="muted">${a}</td><td>${b}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="hint" style="margin-top:8px">Potential gains in consistency, completeness and analyst time must be tested, not assumed.</p>
+    <button class="btn primary" id="go-item3" style="margin-top:10px">Item 2, part 2: from decision to the FRC →</button>
+  </section>
+  ${needsBox('What SomNexus would need to make Item 2 real', [['Authorised read-only access to SmartVista data', 'BPC, SomNexus and the sponsor bank'], ['Customer identity and history', 'Wallet operator and sponsor bank'], ['Monitoring engine producing structured alerts', 'BPC Fraud Management or a separate AML layer'], ['Secure AI model and evidence retrieval', 'Selected technology partner; any AI model that meets data-location rules'], ['Case management and audit trail', 'AML platform or new integration'], ['Compliance rules and approval procedures', 'Sponsor bank and qualified compliance team'], ['Testing on genuine, authorised cases', 'Compliance team and independent validators']], 'Who provides it')}`;
+}
+function bindAi(){
+  mark('ai'); ensureCaseLogs(2);
+  document.querySelectorAll('[data-find]').forEach(b => b.onclick = () => { S.findSel = +b.dataset.find; if (S.findSel === 4) { mark('gaps'); mark('obj2'); } render(); });
+  document.querySelectorAll('input[name=aidec]').forEach(r => r.onchange = () => { S.aiPick = r.value; });
+  $('#ai-rat').oninput = e => { S.aiRationale = e.target.value; };
+  $('#ai-record').onclick = () => {
+    const txt = $('#ai-rat').value.trim();
+    if (txt.length < 15) { const e = $('#ai-err'); e.hidden = false; e.textContent = 'Write a rationale of at least 15 characters. A decision without a reason cannot be defended.'; return; }
+    S.aiDecision = S.aiPick || 'escalate'; S.aiRationale = txt;
+    log(NAMES.analyst, DECISIONS[S.aiDecision] + ' · SX-2026-0042', txt, 'SX-2026-0042');
+    mark('decide'); mark('audit'); mark('obj2'); render(); toast('Decision recorded');
+  };
+  $('#go-item3').onclick = () => goNext('frc');
+}
+
+// ===== Item 3: goAML / FRC =====
+const FRC_NEXT = {
+  more: ['More investigation needed', 'warn', 'Request additional evidence: verify beneficiary relationships, expected customer activity and payment purpose. Escalate any urgent legal obligations without unnecessary delay.'],
+  required: ['Compliance officer determines a report is required', 'crit', 'Prepare the report through the goAML workflow below. Submission is made by the reporting entity through the FRC’s authorised channel.'],
+  none: ['No report warranted after review', 'good', 'Document the decision and the evidence relied on, retain the case records, and continue monitoring if appropriate.'],
+};
+const FRC_REASON = {
+  more: 'Purpose of the transfers and the recipients\u2019 relationships are still unknown; requesting evidence before deciding.',
+  required: 'Rapid distribution to four new counterparties remains unexplained after review; in my judgement the reporting requirement is met.',
+  none: 'Customer evidence explains the transfers as family support; no suspicion remains after review.',
+};
+function viewFrc(){
+  const d = S.frcStep;
+  const node = (t, s, c, on) => `<div class="ccard" style="flex:1 1 170px;border-color:${on ? c : 'var(--rule)'};${on ? 'background:var(--sky-pale)' : ''}"><strong>${t}</strong><span class="small muted">${s}</span></div>`;
+  const steps = [['Collect the reporting data', 'Approved customer information, transactions, counterparties and the investigator’s factual narrative', true], ['Generate a reporting package', 'Populate the FRC web form or build XML in the FRC’s required format', true], ['Validate the report', 'Mandatory fields, references, consistency, report type, FRC-specific rules', true], ['Obtain authorised approval', 'The institution’s authorised officer approves under its procedures', true], ['Submit through an approved FRC channel', 'Done by the reporting entity, not by this demo', false], ['Record the real acknowledgment', 'Keep the FRC’s reference, acceptance or rejection. None is shown here.', false]];
+  return `${notesBlock()}
+  ${itemHead('2, part 2', 'From investigation to the FRC through goAML', 'Not every alert becomes a suspicious transaction report. The compliance officer reviews the facts and decides whether reporting requirements are met.', 'var(--sky-deep)')}
+  <section class="panel">
+    <h2>The reporting path</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:stretch">
+      ${node('SX wallet / SmartVista', '$500 received, $495 moved out', 'var(--sx)', true)}
+      ${node('AI-assisted investigation', 'Sources, indicators, missing evidence', 'var(--sky)', true)}
+      ${node('Authorised compliance officer', 'Verifies findings and decides on reporting', 'var(--sky-deep)', !!d)}
+      ${node('No report required', 'Document, retain, monitor', 'var(--good)', d === 'none')}
+      ${node('Report required', 'Prepare, validate, approve, submit through goAML', 'var(--crit)', d === 'required')}
+    </div>
+    <p class="hint" style="margin-top:8px">Illustrative workflow. The legal threshold, deadlines and the reporting entity are set by Somali requirements and the sponsor-bank agreement.</p>
+  </section>
+  <div class="grid-main">
+    <section class="panel">
+      <div class="panel-head"><div><span class="label">FSI demo · fictional case</span><h2>SX-2026-0042 · reporting decision</h2></div><span class="pill ${d ? FRC_NEXT[d][1] : 'neutral'}">${d ? FRC_NEXT[d][0] : 'Review pending'}</span></div>
+      <div class="notes" style="background:var(--rule-2);border-style:solid;border-color:var(--rule)"><span class="label">AI investigation summary</span><p class="small" style="margin:4px 0 0">The customer received $500 from abroad and sent $495 to three new wallets and a new cash-out agent within 20 minutes. The records do not establish the purpose. <strong>Unusual activity identified; reportability not determined.</strong></p></div>
+      <h3 style="margin-top:12px">Human compliance decision</h3>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" data-frc="more">More investigation needed</button><button class="btn primary" data-frc="required">Report is required</button><button class="btn" data-frc="none">No report warranted</button></div>
+      ${d ? `<div class="verdict ${FRC_NEXT[d][1]}" style="margin-top:12px;align-items:flex-start"><div><strong>Next action</strong><div class="small" style="margin-top:4px">${FRC_NEXT[d][2]}</div></div></div>` : '<p class="hint" style="margin-top:10px">Choose “More investigation needed” first, then “Report is required”.</p>'}
+      ${d === 'required' ? `<h3 style="margin-top:14px">What happens inside goAML</h3><ol class="checklist" style="margin-top:8px">${steps.map(([t, s, ok], i) => `<li><span class="${ok ? 'ok' : 'no'}">${ok ? '✓' : i + 1}</span><span><strong>${t}</strong><br><span class="muted small">${s}</span></span></li>`).join('')}</ol><p class="hint" style="margin-top:8px">An XML file that passes a local check is not proof that the FRC accepted the filing. The Somali schema and submission method come from the FRC.</p>` : ''}
+    </section>
+    <section class="panel">
+      <h2>Keep STRs confidential</h2>
+      <p class="small" style="margin:8px 0 0">A suspicious transaction report must never be placed in a correspondent bank’s evidence pack or shared as proof of compliance. Banks share their monitoring framework, governance and testing instead, without revealing protected reporting details.</p>
+      <h3 style="margin-top:14px">NIRA is not the whole report</h3>
+      <p class="small" style="margin:6px 0 0">The recipient’s NIRA verification does not supply everything a report needs. Sender details and the purpose of onward transfers may need further investigation.</p>
+    </section>
+  </div>
+  <section class="panel">
+    <h2>What the AI would prepare for goAML</h2>
+    <div class="tscroll" style="margin-top:10px"><table>
+      <thead><tr><th>Information</th><th>Where it comes from</th><th>Who checks it</th></tr></thead>
+      <tbody>${[['Reporting institution and authorised officer', 'Approved reporting records of the reporting entity', 'Compliance team'], ['Recipient identity and NIRA status', 'Authorised onboarding records', 'KYC or compliance officer'], ['Incoming $500 remittance', 'SmartVista ledger and payout data', 'Investigator'], ['Three wallet transfers and one cash-out', 'SmartVista transaction records', 'Investigator'], ['Dates, times and references', 'Ledger and transaction history', 'Investigator'], ['Counterparty and agent information', 'Wallet and agent records', 'Investigator'], ['Reasons for concern', 'AI-assisted summary and monitoring findings', 'Compliance officer'], ['Report type and required fields', 'FRC instructions', 'Authorised reporting officer']].map(r => `<tr><td><strong>${r[0]}</strong></td><td class="muted">${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>Who is responsible for reporting?</h2>
+    <div class="tscroll" style="margin-top:10px"><table>
+      <thead><tr><th>Activity</th><th>SomNexus (technology and wallet operator)</th><th>Reporting entity (SomNexus or the sponsor bank, per agreement)</th><th>FRC</th></tr></thead>
+      <tbody>${[['Record SX wallet transactions', 'Wallet processing and records', 'Agreed oversight', '—'], ['Identify unusual activity', 'Monitoring technology', 'Owns and oversees controls', '—'], ['AI investigation summary', 'Source-linked AI assistance', 'Verifies evidence and findings', '—'], ['Decide whether an STR is required', 'Cannot decide for another institution', 'Authorised compliance function decides', 'Sets requirements'], ['Prepare reporting information', 'Software and data', 'Verifies accuracy and completeness', 'Sets reporting standards'], ['Submit the report', 'Only if expressly authorised', 'Submits or authorises filing', 'Receives and processes'], ['Handle acknowledgment', 'Tracks status', 'Reconciles and keeps records', 'Responds through its process']].map(r => `<tr><td><strong>${r[0]}</strong></td><td class="muted">${r[1]}</td><td>${r[2]}</td><td class="muted">${r[3]}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="hint" style="margin-top:8px">Somalia’s AML/CFT Act covers money transfer and e-money services. Whether SomNexus or the sponsor bank is the reporting entity is being confirmed with the FRC and the sponsor bank.</p>
+    <button class="btn primary" id="go-item4" style="margin-top:10px">Item 3: demonstrating effective controls →</button>
+  </section>
+  ${needsBox('What SomNexus has today versus what is demonstrated', [['SmartVista wallet and transaction processing', 'Contracted; under development'], ['Transaction data for reporting', 'Data access confirmed by BPC; not production-verified'], ['AI investigation narrative', 'Demo simulation only'], ['Somalia-specific XML generation', 'Not validated against the FRC schema'], ['Live FRC/goAML connection', 'None'], ['FRC filing and acknowledgment', 'Not shown; none simulated'], ['Human compliance approval', 'Demonstrated; production process needs institutional approval']], 'Present status')}`;
+}
+function caseRecord(){
+  const rec = S.log.filter(l => l.case === CASE);
+  const hum = rec.filter(l => /Analyst|MLRO/.test(l.actor));
+  const checks = [
+    ['Every human decision has a written reason', hum.length > 0 && hum.every(l => (l.reason || '').length >= 15)],
+    ['Four-eyes: analyst and compliance officer both recorded', rec.some(l => /Analyst/.test(l.actor)) && rec.some(l => /MLRO/.test(l.actor))],
+    ['The AI prepared drafts only and made no decision', rec.some(l => /AI assistant/.test(l.actor))],
+  ];
+  return `<section class="panel" style="border-top:4px solid var(--sky-deep)">
+    <div class="panel-head"><div><span class="label">Objective 4 · Investigation records and human approval</span><h2>Case record · ${CASE}</h2></div><span class="pill neutral">${rec.length} entries</span></div>
+    ${rec.length ? `<div class="tscroll"><table><thead><tr><th>Time</th><th>Who</th><th>Action</th><th>Reason recorded</th></tr></thead><tbody>${rec.map(l => `<tr><td class="mono">${l.t}</td><td><strong>${esc(l.actor)}</strong></td><td>${esc(l.action)}</td><td class="muted">${esc(l.reason || '')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="hint">No entries yet. Raise the alert in Item 1 and record decisions in Items 2 and 3.</p>'}
+    <ul class="checklist" style="margin-top:12px">${checks.map(([t, ok]) => `<li><span class="${ok ? 'ok' : 'no'}">${ok ? '✓' : '✕'}</span><span>${t}</span></li>`).join('')}</ul>
+    <p class="hint" style="margin-top:8px">Every entry is timestamped and attributed. This is the record a supervisor, auditor or MENAFATF assessor asks to see.</p>
+  </section>`;
+}
+function bindFrc(){
+  ensureCaseLogs(2);
+  document.querySelectorAll('[data-frc]').forEach(b => b.onclick = () => {
+    S.frcStep = b.dataset.frc;
+    log(NAMES.mlro, FRC_NEXT[S.frcStep][0] + ' · SX-2026-0042', FRC_REASON[S.frcStep], 'SX-2026-0042');
+    if (S.frcStep === 'required') { mark('frc'); mark('roles'); mark('obj3'); }
+    mark('obj4');
+    render();
+  });
+  $('#go-item4').onclick = () => { mark('roles'); goNext('controls'); };
+}
+
+// ===== Item 3: Effective controls =====
+function controlStats(){ return `  <section class="panel" style="border-top:4px solid var(--good)">
+    <div class="panel-head"><div><span class="label">Objective 5 · Evidence of controls for correspondent banks</span><h2>Control statistics a correspondent can rely on</h2></div><span class="pill info">Illustrative month · synthetic data</span></div>
+    <div class="stats">${[['1,973', 'Payments monitored'], ['10', 'Alerts raised'], ['100%', 'Alerts closed or escalated with a written reason'], ['1.5 days', 'Median time from alert to decision'], ['96%', 'Cross-border payments with complete sender and recipient details'], ['6 hours', 'Average time to answer a correspondent RFI']].map(([v, k]) => `<div class="stat" style="border-top-color:var(--good)"><span class="v">${v}</span><span class="k">${k}</span></div>`).join('')}</div>
+    <p class="small" style="margin:10px 0 0">One good RFI answer shows a single payment is fine. Monthly statistics show the controls work every day, which is what a correspondent’s periodic due diligence looks for.</p>
+    <p class="hint" style="margin-top:6px">Aggregate statistics only. No STR details or counts are shared with correspondents.</p>
+  </section>
+`; }
+function viewControls(){
+  return `${notesBlock()}
+  ${itemHead(3, 'Demonstrating effective AML/CFT controls', 'Correspondent banks and MENAFATF assessors ask the same question: show us the controls work. Four kinds of evidence answer it: case records, monitoring results, governed rules and independent oversight.', 'var(--good)')}
+  ${caseRecord()}
+  ${controlStats()}
+  <div class="grid2">
+    <section class="panel">
+      <div class="panel-head"><h2>Governed monitoring rules</h2><span class="pill info">Illustrative</span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Rule</th><th>What it detects</th><th>Approved by</th><th>Date</th></tr></thead>
+        <tbody>${RULES.map(r => `<tr><td class="mono">${r.id}</td><td>${r.name}<div class="hint">${r.nra}</div></td><td>MLRO</td><td class="mono small">${r.approved}</td></tr>`).join('')}</tbody>
+      </table></div>
+      <div class="notes" style="margin-top:10px;background:var(--rule-2);border-style:solid;border-color:var(--rule)"><span class="label">Change log</span><p class="small" style="margin:4px 0 0">Oct 2, 2026: collection-hub rule raised from 8 to 10 distinct senders after a 30-day review of alerts. Reason and approval recorded by the MLRO.</p></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Oversight calendar</h2><span class="pill info">Illustrative</span></div>
+      <ul class="checklist" style="margin-top:4px">
+        <li><span class="ok">✓</span><span><strong>Monthly MLRO report to the board</strong><br><span class="muted small">Alerts, cases, decisions, rule changes. Last: Nov 5, 2026</span></span></li>
+        <li><span class="ok">✓</span><span><strong>Staff and agent training</strong><br><span class="muted small">Somali typologies and reporting duties. Last: Oct 2026</span></span></li>
+        <li><span class="ok">✓</span><span><strong>Quarterly rule review</strong><br><span class="muted small">Are rules catching real risk without too many false alerts? Next: Jan 2027</span></span></li>
+        <li><span class="no">○</span><span><strong>Independent review of the AML programme</strong><br><span class="muted small">Someone outside the process tests the controls. Planned within the first year of operation</span></span></li>
+      </ul>
+    </section>
+  </div>
+  <section class="panel">
+    <h2>From evidence to correspondent confidence</h2>
+    <div class="tscroll" style="margin-top:10px"><table>
+      <thead><tr><th>Evidence</th><th>What it proves</th><th>Who asks for it</th></tr></thead>
+      <tbody>${[['Case records with reasons and four-eyes approval', 'Decisions are reasoned, reviewed and traceable', 'Auditors, supervisors, MENAFATF assessors'], ['Monthly monitoring statistics', 'Controls operate every day, not just on paper', 'Correspondent banks in periodic due diligence'], ['Rule approvals and change log', 'Monitoring is risk-based and governed', 'The CBS and correspondent questionnaires'], ['Training and independent review', 'Controls are understood and tested by someone outside', 'Correspondent questionnaires, the board']].map(r => `<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td class="muted">${r[2]}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="hint" style="margin-top:8px">Correspondents receive aggregate evidence and governance documents. STR details stay confidential.</p>
+    <button class="btn primary" id="go-item4b" style="margin-top:10px">Item 4: a US dollar correspondent inquiry →</button>
+  </section>`;
+}
+function bindControls(){ mark('controls'); mark('obj4'); mark('audit'); $('#go-item4b').onclick = () => goNext('rfi'); }
+
+// ===== Item 4: USD correspondent RFI =====
+const RFI_DOCS = [
+  { id: 'kyb', t: 'Customer identity and KYB', ref: 'Bank customer file KYB-204', d: 'Registered Somali importer. Authorised records identify the business and its controlling persons.', ans: 'The customer is a registered Somali importer; its controlling persons are identified and verified [KYB-204].' },
+  { id: 'inv', t: 'Commercial invoice', ref: 'Document INV-4500', d: 'Merchandise valued at USD 45,000, the named seller and payment terms.', ans: 'The payment settles invoice INV-4500 for merchandise worth USD 45,000 from the named UAE seller [INV-4500].' },
+  { id: 'hist', t: 'Customer transaction history', ref: 'Core ledger, 90-day sample', d: 'Prior commercial payments over the last 90 days.', ans: 'The amount is consistent with the customer’s prior commercial payments [Ledger, 90 days].' },
+  { id: 'scr', t: 'Sanctions screening resolution', ref: 'Screening case SCR-091', d: 'Documented resolution of a potential name match.', ans: 'A potential name match was reviewed and cleared using date of birth and registration records [SCR-091].' },
+  { id: 'sof', t: 'Source of funds verification', ref: 'Compliance request SOF-022', d: 'Evidence of where the payment balance came from.', ans: 'Funds come from the customer’s documented sales receipts [SOF-022].' },
+  { id: 'ben', t: 'Beneficiary business verification', ref: 'Counterparty file CP-007', d: 'The supplier’s ownership and the trading relationship.', ans: 'The supplier’s registration and the trading relationship were verified [CP-007].' },
+];
+function viewRfi4(){
+  const have = S.rfiDocs || (S.rfiDocs = new Set(['kyb', 'inv', 'hist']));
+  const missing = RFI_DOCS.filter(x => !have.has(x.id));
+  const complete = !missing.length;
+  const prepared = S.rfiPrepared;
+  const chainCard = (t, s, c) => `<div class="ccard" style="flex:1 1 180px;border-color:${c}"><strong>${t}</strong><span class="small muted">${s}</span></div>`;
+  let draft = '';
+  if (prepared === 'partial') draft = `DRAFT — NOT READY TO SEND (RFI-USD-0045)\n\nConfirmed so far:\n${RFI_DOCS.filter(x => have.has(x.id)).map(x => '• ' + x.ans).join('\n')}\n\nOutstanding before any response can be approved:\n${missing.map(x => '• ' + x.t + ' (' + x.ref + ')').join('\n')}\n\nThe assistant does not fill these gaps. Compliance must obtain the evidence first.`;
+  if (prepared === 'full') draft = `DRAFT RESPONSE — RFI-USD-0045\nTo: International correspondent bank (fictional)\nPayment: USD 45,000, Mogadishu importer to UAE supplier\n\n${RFI_DOCS.map((x, i) => (i + 1) + '. ' + x.ans).join('\n')}\n\nSupporting documents are available on request through the agreed channel.\nNo confidential reporting information is included.\n\nStatus: ${S.rfiOk ? 'Approved by compliance officer (demo)' : 'Pending compliance officer approval'}`;
+  return `${notesBlock()}
+  ${itemHead(4, 'Answering a US dollar correspondent banking inquiry', 'The same technology helps a Somali bank assemble accurate, source-linked answers when an international bank asks about a payment. This is a bank-level example: SX wallet does not process it.', 'var(--good)')}
+  <section class="panel">
+    <div class="panel-head"><h2>A $45,000 trade payment</h2><span class="pill info">Fictional international payment</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${chainCard('Somali importer, Mogadishu', 'Pays for imported merchandise', 'var(--rule)')}
+      ${chainCard('Somali commercial bank', 'Due diligence, payment checks, payment instruction', 'var(--sky)')}
+      ${chainCard('International correspondent bank', 'Reviews the USD payment and sends an RFI', 'var(--good)')}
+      ${chainCard('Supplier’s bank, UAE', 'Beneficiary bank', 'var(--rule)')}
+    </div>
+    <div class="notes" style="margin-top:12px;background:var(--rule-2);border-style:solid;border-color:var(--rule)"><span class="label">Request for information</span><p class="small" style="margin:4px 0 0">“Please provide information about this payment, including the customer, beneficiary, underlying business purpose and supporting commercial documents.” An RFI does not mean the payment is suspicious; the correspondent needs it for its own compliance.</p></div>
+  </section>
+  <div class="grid-main">
+    <section class="panel">
+      <div class="panel-head"><div><span class="label">AI correspondent banking assistant</span><h2>RFI-USD-0045</h2></div><span class="pill ${complete ? 'good' : 'warn'}">${complete ? 'Evidence complete' : 'Evidence incomplete'}</span></div>
+      <p class="small muted" style="margin:0 0 8px">Tick the documents that have been obtained and verified.</p>
+      <div style="display:flex;flex-direction:column;gap:6px">${RFI_DOCS.map(x => `<label class="ccard" style="flex-direction:row;gap:10px;align-items:flex-start;cursor:pointer;${have.has(x.id) ? 'border-color:var(--good)' : ''}"><input type="checkbox" data-doc="${x.id}" ${have.has(x.id) ? 'checked' : ''} style="margin-top:3px"><span><strong>${x.t}</strong> <span class="mono small muted">${x.ref}</span><br><span class="small muted">${x.d}</span></span></label>`).join('')}</div>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" id="rfi-prep">Prepare simulated AI response</button>${prepared === 'full' && !S.rfiOk ? '<button class="btn" id="rfi-ok">Approve as compliance officer (demo)</button>' : ''}</div>
+      <p class="hint" style="margin-top:6px">Interactive simulation with fictional documents and predefined logic. Not a live AI model or a real correspondent channel.</p>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Evidence review</h2><span class="mono">${have.size} of 6</span></div>
+      ${missing.length ? `<span class="label" style="color:var(--crit)">Outstanding information</span><ul class="small" style="margin:6px 0 0;padding-left:18px">${missing.map(x => `<li>${x.t}</li>`).join('')}</ul>` : '<div class="verdict good"><strong>All six evidence areas verified</strong></div>'}
+      ${prepared ? `<textarea class="copyarea" readonly style="margin-top:12px;min-height:260px">${esc(draft)}</textarea>` : '<p class="hint" style="margin-top:12px">Prepare a response first with documents missing, then tick the rest and prepare it again.</p>'}
+    </section>
+  </div>
+  <section class="panel">
+    <h2>Who makes the final decision?</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">${[['Correspondent sends RFI', 'Through an authorised channel'], ['AI prepares draft and checklist', 'Retrieves records, flags gaps, cites sources'], ['Somali bank compliance officer', 'Verifies facts, clears screening, approves'], ['Authorised response sent', 'Through the bank’s correspondent channel'], ['Correspondent decides', 'Process, hold, reject or ask more']].map(([t, s], i) => `<div class="ccard" style="flex:1 1 160px;${i === 2 ? 'border-color:var(--sky-deep);background:var(--sky-pale)' : ''}"><span class="mono small" style="color:var(--sky-deep)">${i + 1}</span><strong>${t}</strong><span class="small muted">${s}</span></div>`).join('')}</div>
+    <p class="small" style="margin:10px 0 0">AI does not authorise or release payments. The response never includes STR filings, FRC communications or other protected information.</p>
+  </section>
+  <div class="grid2">
+    <section class="panel">
+      <h2>Where SX wallet fits</h2>
+      <div class="tscroll" style="margin-top:10px"><table>
+        <thead><tr><th>Function</th><th>SX wallet / SmartVista</th><th>Somali commercial bank</th></tr></thead>
+        <tbody>${[['Local remittance payouts', 'Wallet processing and records', 'Settlement or sponsorship'], ['$45,000 importer payment', 'Not processed (limit $3,000; individuals only)', 'Initiates and manages it'], ['AI investigation', 'Same approach on wallet records', 'Same approach on bank records'], ['Correspondent RFI response', 'Supplies wallet information when authorised', 'Owns the relationship and response'], ['Final payment decision', 'No authority', 'Each bank decides for itself']].map(r => `<tr><td><strong>${r[0]}</strong></td><td class="muted">${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>
+    <section class="panel">
+      <h2>What AI can and cannot change</h2>
+      <div class="tscroll" style="margin-top:10px"><table>
+        <thead><tr><th>Current challenge</th><th>Possible improvement</th></tr></thead>
+        <tbody>${[['Information spread across systems', 'Faster evidence gathering'], ['Incomplete payment documentation', 'Missing records flagged automatically'], ['Manual reviews take staff time', 'Draft summaries for human checking'], ['Inconsistent RFI responses', 'Standard checklists and sourced answers'], ['Hard to prove controls work', 'Auditable reviews and quality metrics']].map(r => `<tr><td class="muted">${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</tbody>
+      </table></div>
+      <p class="hint" style="margin-top:8px">AI cannot remove country risk, sanctions constraints or a correspondent’s risk appetite.</p>
+    </section>
+  </div>
+  ${needsBox('What a bank would need to make Item 4 operational', [['Participating bank and authorised RFI workflow', 'Somali bank'], ['Access to KYC/KYB and transaction records', 'Somali bank'], ['Invoices, ownership and payment documents', 'Somali bank and its customer'], ['AI retrieval and evidence documentation', 'Selected technology partner; any AI model that meets the bank’s rules'], ['Sanctions screening and resolution workflow', 'Bank and AML technology provider'], ['Human review, permissions and audit trail', 'Bank and technology provider'], ['Secure communication with the correspondent', 'Somali bank, approved channels'], ['Independent testing and security review', 'Qualified specialists']], 'Who provides it')}
+  <section class="panel" style="background:var(--sky-pale);border-color:var(--sky)"><p style="margin:0;font-size:16px"><strong>Closing message:</strong> AI cannot guarantee access to correspondent banking. It can help Somali institutions show stronger, more transparent, better-documented controls, which is the foundation of trust with international partners.</p><button class="btn primary" id="go-close" style="margin-top:10px">Close: status of what you saw →</button></section>`;
+}
+function bindRfi4(){
+  document.querySelectorAll('[data-doc]').forEach(c => c.onchange = () => { const s = S.rfiDocs; c.checked ? s.add(c.dataset.doc) : s.delete(c.dataset.doc); if (S.rfiPrepared) S.rfiPrepared = null; S.rfiOk = false; render(); });
+  $('#rfi-prep').onclick = () => { const full = S.rfiDocs.size === RFI_DOCS.length; S.rfiPrepared = full ? 'full' : 'partial'; if (!full) mark('gaps'); render(); toast(full ? 'Draft response ready for approval' : 'Draft blocked: evidence missing'); };
+  const ok = $('#rfi-ok'); if (ok) ok.onclick = () => { S.rfiOk = true; log(NAMES.mlro, 'Approved response to RFI-USD-0045', 'All six evidence areas verified; no confidential reporting information included.', null); mark('rfi'); mark('confid'); mark('obj5'); render(); toast('Response approved'); };
+  $('#go-close').onclick = () => goNext('forward');
+}
+
 // ---------- USD correspondent ----------
 const PAY_REQ = [['oName', 'Sender name'], ['oAcct', 'Sender account'], ['oAddr', 'Sender address or ID'], ['bName', 'Recipient name'], ['bAcct', 'Recipient account'], ['purpose', 'Payment purpose']];
 const PAY_CASE = 'USD-26-1027-01';
 function buildPayments(){
   const c147 = D.customers['C-0147'];
   return [
-    { id: PAY_CASE, ts: 26 * DAY + 9 * 60 + 12, amount: 800, corr: 'Correspondent Bank A (US)', origin: 'United Kingdom', oName: 'Abdiweli Warsame Nur', oAcct: 'GB** **** 4471', oAddr: 'London, United Kingdom', bName: c147.name, bAcct: 'eLacag WAL-0147', bId: 'C-0147', purpose: 'Family support' },
-    { id: 'USD-26-1003-02', ts: 2 * DAY + 610, amount: 1200, corr: 'Correspondent Bank A (US)', origin: 'United States', oName: 'Hawa Mohamed Elmi', oAcct: 'US** **** 0912', oAddr: 'Minneapolis, United States', bName: D.customers['C-0018'].name, bAcct: 'eLacag WAL-0018', bId: 'C-0018', purpose: 'School fees' },
+    { id: PAY_CASE, ts: 26 * DAY + 9 * 60 + 12, amount: 800, corr: 'Correspondent Bank A (US)', origin: 'United Kingdom', oName: 'Abdiweli Warsame Nur', oAcct: 'GB** **** 4471', oAddr: 'London, United Kingdom', bName: c147.name, bAcct: 'SX wallet WAL-0147', bId: 'C-0147', purpose: 'Family support' },
+    { id: 'USD-26-1003-02', ts: 2 * DAY + 610, amount: 1200, corr: 'Correspondent Bank A (US)', origin: 'United States', oName: 'Hawa Mohamed Elmi', oAcct: 'US** **** 0912', oAddr: 'Minneapolis, United States', bName: D.customers['C-0018'].name, bAcct: 'SX wallet WAL-0018', bId: 'C-0018', purpose: 'School fees' },
     { id: 'USD-26-1006-01', ts: 5 * DAY + 700, amount: 4500, corr: 'Correspondent Bank B (EU)', origin: 'Sweden', oName: 'Nordic Trade AB', oAcct: 'SE** **** 3380', oAddr: 'Stockholm, Sweden', bName: 'Hamarweyne Textiles', bAcct: 'Merchant M-08', bId: 'M-08', purpose: 'Supplier payment, invoice 2026-114' },
-    { id: 'USD-26-1009-03', ts: 8 * DAY + 820, amount: 2600, corr: 'Correspondent Bank A (US)', origin: 'United States', oName: 'Faisal Ali Gedi', oAcct: 'US** **** 5520', oAddr: '', bName: D.customers['C-0077'].name, bAcct: 'eLacag WAL-0077', bId: 'C-0077', purpose: 'Family support' },
+    { id: 'USD-26-1009-03', ts: 8 * DAY + 820, amount: 2600, corr: 'Correspondent Bank A (US)', origin: 'United States', oName: 'Faisal Ali Gedi', oAcct: 'US** **** 5520', oAddr: '', bName: D.customers['C-0077'].name, bAcct: 'SX wallet WAL-0077', bId: 'C-0077', purpose: 'Family support' },
     { id: 'USD-26-1012-01', ts: 11 * DAY + 640, amount: 1750, corr: 'Correspondent Bank B (EU)', origin: 'United Arab Emirates', oName: 'Gulf General Trading LLC', oAcct: 'AE** **** 7718', oAddr: 'Dubai, United Arab Emirates', bName: 'Xamar Electronics', bAcct: 'Merchant M-04', bId: 'M-04', purpose: '' },
-    { id: 'USD-26-1029-02', ts: 28 * DAY + 900, amount: 3000, corr: 'Correspondent Bank A (US)', origin: 'Canada', oName: 'Sahra Abdi Jama', oAcct: 'CA** **** 2209', oAddr: 'Toronto, Canada', bName: 'Mohamud Abdikarim Dhore', bAcct: 'eLacag WAL-0301', bId: 'C-0301', purpose: 'Business start-up' },
-    { id: 'USD-26-1018-01', ts: 17 * DAY + 610, amount: 1500, corr: 'Correspondent Bank B (EU)', origin: 'Sweden', oName: 'Ladan Osman Shire', oAcct: 'SE** **** 6604', oAddr: 'Uppsala, Sweden', bName: D.customers['C-0212'].name, bAcct: 'eLacag WAL-0212', bId: 'C-0212', purpose: 'Medical' },
+    { id: 'USD-26-1029-02', ts: 28 * DAY + 900, amount: 3000, corr: 'Correspondent Bank A (US)', origin: 'Canada', oName: 'Sahra Abdi Jama', oAcct: 'CA** **** 2209', oAddr: 'Toronto, Canada', bName: 'Mohamud Abdikarim Dhore', bAcct: 'SX wallet WAL-0301', bId: 'C-0301', purpose: 'Business start-up' },
+    { id: 'USD-26-1018-01', ts: 17 * DAY + 610, amount: 1500, corr: 'Correspondent Bank B (EU)', origin: 'Sweden', oName: 'Ladan Osman Shire', oAcct: 'SE** **** 6604', oAddr: 'Uppsala, Sweden', bName: D.customers['C-0212'].name, bAcct: 'SX wallet WAL-0212', bId: 'C-0212', purpose: 'Medical' },
     { id: 'USD-26-1021-04', ts: 20 * DAY + 760, amount: 9800, corr: 'Correspondent Bank A (US)', origin: 'United States', oName: 'Omar Hassan Duale', oAcct: '', oAddr: 'Columbus, United States', bName: D.customers['C-0033'].name, bAcct: '', bId: 'C-0033', purpose: 'Investment' },
-    { id: 'USD-26-1024-02', ts: 23 * DAY + 680, amount: 1100, corr: 'Correspondent Bank A (US)', origin: 'United Kingdom', oName: 'Ubah Farah Roble', oAcct: 'GB** **** 8835', oAddr: 'Birmingham, United Kingdom', bName: D.customers['C-0140'].name, bAcct: 'eLacag WAL-0140', bId: 'C-0140', purpose: 'Family support' },
-    { id: 'USD-26-1029-01', ts: 28 * DAY + 600, amount: 2200, corr: 'Correspondent Bank B (EU)', origin: 'Norway', oName: 'Ismail Nur Samatar', oAcct: 'NO** **** 1462', oAddr: 'Oslo, Norway', bName: D.customers['C-0255'].name, bAcct: 'eLacag WAL-0255', bId: 'C-0255', purpose: 'Rent' },
+    { id: 'USD-26-1024-02', ts: 23 * DAY + 680, amount: 1100, corr: 'Correspondent Bank A (US)', origin: 'United Kingdom', oName: 'Ubah Farah Roble', oAcct: 'GB** **** 8835', oAddr: 'Birmingham, United Kingdom', bName: D.customers['C-0140'].name, bAcct: 'SX wallet WAL-0140', bId: 'C-0140', purpose: 'Family support' },
+    { id: 'USD-26-1029-01', ts: 28 * DAY + 600, amount: 2200, corr: 'Correspondent Bank B (EU)', origin: 'Norway', oName: 'Ismail Nur Samatar', oAcct: 'NO** **** 1462', oAddr: 'Oslo, Norway', bName: D.customers['C-0255'].name, bAcct: 'SX wallet WAL-0255', bId: 'C-0255', purpose: 'Rent' },
   ].sort((a, b) => b.ts - a.ts);
 }
 const PAYMENTS = buildPayments();
@@ -1131,7 +1552,7 @@ function viewUsd(){
       <thead><tr><th>Payment</th><th>Date (EAT)</th><th class="r">USD</th><th>Sender</th><th>Recipient</th><th>Payment details</th><th>Screening</th><th>Action</th></tr></thead>
       <tbody>${PAYMENTS.map(p => { const a = assessPay(p); return `<tr class="click ${p.id === sel.id ? 'sel' : ''}" data-pay="${p.id}"><td class="mono">${p.id}</td><td class="mono">${fmtTs(p.ts)}</td><td class="r num">${p.amount.toLocaleString()}</td><td>${esc(p.oName)}<div class="hint">${esc(p.origin)} · ${esc(p.corr)}</div></td><td>${esc(p.bName)}<div class="hint mono">${p.bId}</div></td><td>${a.missing.length ? `<span class="pill warn">Missing ${a.missing.length}</span><div class="hint">${esc(a.missing.join(', '))}</div>` : '<span class="pill good">Complete</span>'}</td><td>${a.hit ? `<span class="pill crit">${Math.round(a.top.score * 100)}% match</span><div class="hint">${a.top.w.id}</div>` : '<span class="pill good">Clear</span>'}</td><td><span class="pill ${a.action[1]}">${a.action[0]}</span></td></tr>`; }).join('')}</tbody>
     </table></div>
-    <p class="hint" style="margin-top:8px">Required for cross-border payments: sender name, account and address or ID; recipient name and account; purpose. Click a payment to answer a correspondent’s question about it.</p>
+    <p class="hint" style="margin-top:8px">FATF Recommendation 16 requires the sender’s name, account and address or ID, and the recipient’s name and account. Payment purpose is not an R16 field, but correspondents and many regulators expect it, especially for trade payments. Click a payment to answer a correspondent’s question about it.</p>
   </section>
   <div class="grid-main">
     <section class="panel">
@@ -1261,6 +1682,7 @@ function viewReadiness(){
       <h3 style="margin-top:16px">90-day path</h3>
       <ol class="small" style="padding-left:18px;margin:6px 0 0"><li><strong>Days 1–30:</strong> clean customer data and IDs; confirm you can extract your own data.</li><li><strong>Days 31–60:</strong> 8–10 typology rules, automatic large cash reports, a documented STR workflow.</li><li><strong>Days 61–90:</strong> AI-assisted case notes, monthly statistics, first internal effectiveness review.</li></ol>
       <button class="btn" id="fill-sample" style="margin-top:14px">Fill an example bank</button>
+      <p class="hint" style="margin-top:8px">A self-check for discussion, not an independent audit of AML effectiveness.</p>
     </section>
   </div>`;
 }
@@ -1309,19 +1731,34 @@ function viewForward(){
     </section>
   </div>
   <section class="panel" style="background:var(--sky-pale);border-color:var(--sky)">
-    <h2>Our boundaries</h2>
-    <p class="small" style="margin:6px 0 0">SomNexus is a registered PSP operating under a Somali sponsor bank; eLacag is being built on BPC SmartVista and is not yet live. This demonstration uses synthetic data, claims no detection results, and is not connected to BPC, NIRA or the FRC. Reporting formats follow FRC guidance, and each institution remains responsible for its own obligations.</p>
+    <div class="panel-head"><h2>Status of what you saw today</h2><span class="muted small">Everything shown runs on synthetic data</span></div>
+    <div class="tscroll" style="background:var(--panel)"><table>
+      <thead><tr><th>Component</th><th>In this demonstration</th><th>Real-world status</th></tr></thead>
+      <tbody>${[
+        ['SX wallet on BPC SmartVista', 'Synthetic transactions only', 'good', 'Contracted with BPC; build in progress, not yet live'],
+        ['Remittance partner', 'Illustrative provider', 'neutral', 'No partner agreement signed'],
+        ['Monitoring rules and risk scores', 'Illustrative thresholds', 'neutral', 'Not calibrated on real data; no detection results claimed'],
+        ['AI investigation workspace and summaries', 'Predefined findings on fictional data', 'neutral', 'No production AI model; nothing connected to SmartVista'],
+        ['Network view of linked wallets', 'Drawn from synthetic transactions', 'neutral', 'No deployed network-analysis system'],
+        ['Analyst and MLRO decisions, audit trail', 'Interactive demonstration', 'neutral', 'Not an operating case-management system'],
+        ['goAML STR and large cash reports', 'Drafts in the general goAML structure', 'neutral', 'Not validated against the FRC schema; no FRC connection; nothing submitted'],
+        ['Correspondent RFI assistant and evidence pack', 'Simulated with fictional documents', 'neutral', 'No live correspondent inquiry; not validated production records'],
+        ['Readiness self-assessment', 'Prototype tool', 'neutral', 'A self-check, not an independent AML effectiveness audit'],
+      ].map(([c, d, k, r]) => `<tr><td><strong>${c}</strong></td><td class="muted">${d}</td><td><span class="pill ${k}">${k === 'good' ? 'In progress' : 'Not operational'}</span><div class="hint" style="margin-top:3px">${r}</div></td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="small" style="margin:10px 0 0">SomNexus is a registered PSP operating under a Somali sponsor bank. Reporting formats follow FRC guidance, and each institution remains responsible for its own obligations.</p>
   </section>`;
 }
 function bindForward(){ if (!S.seenForward) { S.seenForward = true; renderTabs(); } }
 
 // ---------- Render ----------
-const VIEWS = { platform: [viewPlatform, bindPlatform], monitor: [viewMonitor, bindMonitor], investigate: [viewInvestigate, bindInvestigate], screen: [viewScreen, bindScreen], report: [viewReport, bindReport], evidence: [viewEvidence, bindEvidence], usd: [viewUsd, bindUsd], readiness: [viewReadiness, bindReadiness], forward: [viewForward, bindForward] };
+const VIEWS = { controls: [viewControls, bindControls], ai: [viewAi, bindAi], frc: [viewFrc, bindFrc], rfi: [viewRfi4, bindRfi4], platform: [viewPlatform, bindPlatform], monitor: [viewMonitor, bindMonitor], investigate: [viewInvestigate, bindInvestigate], screen: [viewScreen, bindScreen], report: [viewReport, bindReport], evidence: [viewEvidence, bindEvidence], journey: [viewJourney, bindJourney], usd: [viewUsd, bindUsd], readiness: [viewReadiness, bindReadiness], forward: [viewForward, bindForward] };
 function render(){ renderHero(); renderTabs(); renderLens(); renderTour(); const [v, b] = VIEWS[S.tab]; $('#pane').innerHTML = v(); b(); }
 $('#role-analyst').onclick = () => { S.role = 'analyst'; $('#role-analyst').setAttribute('aria-pressed', 'true'); $('#role-mlro').setAttribute('aria-pressed', 'false'); render(); };
 $('#role-mlro').onclick = () => { S.role = 'mlro'; $('#role-mlro').setAttribute('aria-pressed', 'true'); $('#role-analyst').setAttribute('aria-pressed', 'false'); render(); };
+$('#toggle-core').onclick = () => { S.core = !S.core; $('#toggle-core').setAttribute('aria-pressed', String(S.core)); if (S.core && !TABS.find(t => t.id === S.tab).core) S.tab = 'journey'; S.tourStep = null; render(); toast(S.core ? 'Presentation path: Items 1\u20134' : 'All tabs shown, including the appendix'); };
 $('#toggle-notes').onclick = () => { S.notes = !S.notes; $('#toggle-notes').setAttribute('aria-pressed', String(S.notes)); render(); };
-$('#reset-demo').onclick = () => { Object.assign(S, { tourStep: null, seenForward: false, rfiApproved: {}, rfiSel: null, P: { ...DEFAULT_P }, tab: 'platform', done: new Set(), status: {}, log: [], packGenerated: false, screenName: 'Maxamuud Cabdikariim Dhoore', screenRun: false, readiness: {}, monitorRun: false, reportSel: null }); rerun(); render(); toast('Demo reset'); };
+$('#reset-demo').onclick = () => { Object.assign(S, { loggedAlert: false, loggedAi: false, findSel: 0, aiDecision: null, aiPick: null, aiRationale: null, frcStep: null, rfiDocs: null, rfiPrepared: null, rfiOk: false, journeyMode: 'normal', journeyView: 'launch', tourStep: null, seenForward: false, rfiApproved: {}, rfiSel: null, P: { ...DEFAULT_P }, tab: 'journey', done: new Set(), status: {}, log: [], packGenerated: false, screenName: 'Maxamuud Cabdikariim Dhoore', screenRun: false, readiness: {}, monitorRun: false, reportSel: null }); rerun(); render(); toast('Demo reset'); };
 
 // ---------- Charts and hero ----------
 function niceStep(raw){ const p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
@@ -1356,34 +1793,33 @@ function renderHero(){
 
 // ---------- Guided tour ----------
 const mainCase = () => (S.alerts.find(a => a.subject === 'C-0147') || S.alerts[0]);
+const AI_DEFAULT = 'Rapid distribution of incoming funds to new counterparties warrants further review. Relationship and payment-purpose evidence is incomplete.';
 const TOUR = [
-  { t: 'Start with the platform', p: 'SmartVista already runs Somalia’s national instant payment system. This map shows what the platform offers, what SomNexus has today, and what our AI layer adds.', run: () => { S.tab = 'platform'; } },
-  { t: 'Detect with Somali typologies', p: 'Monitoring runs over 30 days of synthetic Somali activity. Each rule maps to a National Risk Assessment theme. Large cash reports file automatically, with no staff judgement.', run: () => { S.tab = 'monitor'; if (!S.monitorRun) { rerun(); S.monitorRun = true; log('System', 'Monitoring run', `${S.alerts.length} alerts, ${S.lctr.length} large cash reports.`); } mark('detect'); } },
-  { t: 'Explain every alert', p: 'The main case: $800 received, then split into four $200 transfers within 19 minutes, two to hub wallets. Every point of the score has a reason, and the AI note separates facts from hypotheses.', run: () => { S.tab = 'investigate'; S.sel = mainCase().id; mark('explain'); } },
-  { t: 'People decide, with reasons', p: 'The analyst escalates with a written reason; the MLRO approves. The AI cannot close a case or file a report. Every action is timestamped and attributed.', run: () => { const a = mainCase(); S.tab = 'investigate'; S.sel = a.id; if (S.status[a.subject] !== 'approved') { log(NAMES.analyst, 'Escalated to MLRO · ' + a.id, 'Rapid pass-through of $800 to four wallets, two of them collection hubs. Purpose unknown. Escalating for a reporting decision.', a.subject); log(NAMES.mlro, 'Approved suspicious transaction report · ' + a.id, 'Pattern consistent with use of collection hubs; no customer explanation available. STR warranted; linked reviews opened.', a.subject); S.status[a.subject] = 'approved'; } mark('decide'); mark('audit'); } },
-  { t: 'Screen Somali name variants', p: 'Exact matching misses “Maxamuud Cabdikariim Dhoore”. Spelling-aware matching (x→h, c dropped, dh→d) finds the listed name. A person then confirms or clears it.', run: () => { S.tab = 'screen'; S.screenName = 'Maxamuud Cabdikariim Dhoore'; S.screenRun = true; mark('screen'); } },
-  { t: 'Prepare the goAML report', p: 'Only an MLRO-approved case becomes a report. The draft follows the goAML structure, and the pre-submission check shows what must be completed before upload to the FRC.', run: () => { S.tab = 'report'; } },
-  { t: 'The USD correspondent view', p: 'The event\u2019s core question: why would a US bank keep processing Somali dollar payments? Complete payment details, screening of every party, and a documented answer to the correspondent\u2019s question within the same day.', run: () => { S.tab = 'usd'; mark('usd'); approveRfi(PAY_CASE); } },
-  { t: 'Prove it works', p: 'Statistics come from the actions just taken. The evidence pack answers typical correspondent-bank questions with proof, and redacts personal data.', run: () => { S.tab = 'evidence'; S.packGenerated = true; mark('pack'); } },
-  { t: 'Leave every bank with a plan', p: 'A 12-question self-assessment any Somali bank can use tomorrow, whatever its platform, with a 90-day path.', run: () => { S.tab = 'readiness'; if (Object.keys(S.readiness).length < 12) [1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0].forEach((v, i) => S.readiness[i] = v); } },
-  { t: 'The way forward', p: 'Three routes any Somali institution can take, where AI investigation fits on any platform, and what every participant takes home. Both FSI objectives are now covered.', run: () => { S.tab = 'forward'; S.seenForward = true; } },
+  { core: true, t: 'Item 1 · Detect unusual activity', p: 'A $500 remittance lands in a NIRA-verified SX wallet. Normal spending stays routine; $495 sent to four new counterparties in 20 minutes raises an alert.', run: () => { S.tab = 'journey'; S.journeyMode = 'unusual'; ensureCaseLogs(1); mark('journey'); mark('obj1'); } },
+  { core: true, t: 'Item 2 · AI gathers the evidence', p: 'The AI pulls SmartVista records, identity and six months of history, and states every finding with its source.', run: () => { S.tab = 'ai'; S.findSel = 0; mark('ai'); } },
+  { core: true, t: 'Item 2 · Missing evidence is flagged', p: 'The fifth finding shows what the records cannot tell us. A trustworthy AI flags gaps instead of inventing facts.', run: () => { S.tab = 'ai'; S.findSel = 4; ensureCaseLogs(2); mark('gaps'); mark('obj2'); } },
+  { core: true, t: 'Item 2 · A person decides', p: 'The analyst records a decision with a written rationale. The AI cannot approve or file a report.', run: () => { S.tab = 'ai'; ensureCaseLogs(2); if (!S.aiDecision) { S.aiDecision = 'escalate'; S.aiRationale = S.aiRationale || AI_DEFAULT; log(NAMES.analyst, DECISIONS.escalate + ' · SX-2026-0042', S.aiRationale, 'SX-2026-0042'); } mark('decide'); mark('audit'); } },
+  { core: true, t: 'Item 2 · From decision to the FRC', p: 'The compliance officer decides a report is required. goAML preparation, validation and approval follow; the reporting entity submits through the FRC’s channel.', run: () => { S.tab = 'frc'; if (S.frcStep !== 'required') { S.frcStep = 'required'; log(NAMES.mlro, FRC_NEXT.required[0] + ' · SX-2026-0042', FRC_REASON.required, 'SX-2026-0042'); } mark('frc'); mark('roles'); mark('obj3'); mark('obj4'); } },
+  { core: true, t: 'Item 3 · Proving the controls work', p: 'The case record, monthly statistics, approved rules and oversight calendar: the evidence correspondents and MENAFATF assessors ask for.', run: () => { S.tab = 'controls'; mark('controls'); mark('obj4'); } },
+  { core: true, t: 'Item 4 · A USD inquiry, evidence incomplete', p: 'A correspondent asks about a $45,000 import payment. With three of six documents, the assistant blocks the response and lists what is missing.', run: () => { S.tab = 'rfi'; S.rfiDocs = new Set(['kyb', 'inv', 'hist']); S.rfiPrepared = 'partial'; S.rfiOk = false; } },
+  { core: true, t: 'Item 4 · Complete evidence, approved answer', p: 'With all six documents verified, the assistant drafts a sourced answer and the compliance officer approves it. No STR information is ever included.', run: () => { S.tab = 'rfi'; S.rfiDocs = new Set(RFI_DOCS.map(x => x.id)); S.rfiPrepared = 'full'; if (!S.rfiOk) { S.rfiOk = true; log(NAMES.mlro, 'Approved response to RFI-USD-0045', 'All six evidence areas verified; no confidential reporting information included.', null); } mark('rfi'); mark('confid'); mark('obj5'); } },
+  { core: true, t: 'Close · What is real today', p: 'AI cannot guarantee correspondent access. It can make controls stronger, more transparent and better documented. Here is the status of everything you saw.', run: () => { S.tab = 'forward'; S.seenForward = true; } },
 ];
+const TS = () => S.core ? TOUR.filter(t => t.core) : TOUR;
 function renderTour(){
   const el = $('#tour');
   if (S.tourStep == null) { el.hidden = true; return; }
-  const i = S.tourStep, st = TOUR[i];
+  const i = S.tourStep, st = TS()[i];
   el.hidden = false;
-  el.innerHTML = `<div class="tour-top"><span class="label">Guided tour · ${i + 1} of ${TOUR.length}</span><button id="tour-x" aria-label="Close tour">Close ✕</button></div>
-  <div class="tour-body"><div class="tour-dots">${TOUR.map((_, k) => `<span class="${k <= i ? 'on' : ''}"></span>`).join('')}</div><h3>${esc(st.t)}</h3><p>${esc(st.p)}</p>
-  <div class="tour-nav"><button class="btn" id="tour-back" ${i === 0 ? 'disabled' : ''}>Back</button><button class="btn primary" id="tour-next">${i === TOUR.length - 1 ? 'Finish' : 'Next'}</button></div></div>`;
+  el.innerHTML = `<div class="tour-top"><span class="label">Guided tour · ${i + 1} of ${TS().length}</span><button id="tour-x" aria-label="Close tour">Close ✕</button></div>
+  <div class="tour-body"><div class="tour-dots">${TS().map((_, k) => `<span class="${k <= i ? 'on' : ''}"></span>`).join('')}</div><h3>${esc(st.t)}</h3><p>${esc(st.p)}</p>
+  <div class="tour-nav"><button class="btn" id="tour-back" ${i === 0 ? 'disabled' : ''}>Back</button><button class="btn primary" id="tour-next">${i === TS().length - 1 ? 'Finish' : 'Next'}</button></div></div>`;
   $('#tour-x').onclick = () => { S.tourStep = null; render(); };
-  $('#tour-back').onclick = () => { S.tourStep = Math.max(0, i - 1); TOUR[S.tourStep].run(); render(); };
-  $('#tour-next').onclick = () => { if (i === TOUR.length - 1) { S.tourStep = null; render(); toast('Tour complete'); return; } S.tourStep = i + 1; TOUR[S.tourStep].run(); render(); window.scrollTo({ top: $('#tabs').offsetTop - 4, behavior: 'smooth' }); };
+  $('#tour-back').onclick = () => { S.tourStep = Math.max(0, i - 1); TS()[S.tourStep].run(); render(); };
+  $('#tour-next').onclick = () => { if (i === TS().length - 1) { S.tourStep = null; render(); toast('Tour complete'); return; } S.tourStep = i + 1; TS()[S.tourStep].run(); render(); window.scrollTo({ top: $('#tabs').offsetTop - 4, behavior: 'smooth' }); };
 }
 S.tourStep = null;
-$('#start-tour').onclick = () => { S.tourStep = 0; TOUR[0].run(); render(); };
-$('#jump-case').onclick = () => { S.tab = 'investigate'; S.sel = mainCase().id; mark('explain'); render(); window.scrollTo({ top: $('#tabs').offsetTop - 4, behavior: 'smooth' }); };
+$('#start-tour').onclick = () => { S.tourStep = 0; TS()[0].run(); render(); };
+$('#jump-case').onclick = () => { S.tab = 'journey'; render(); window.scrollTo({ top: $('#tabs').offsetTop - 4, behavior: 'smooth' }); };
 render();
 </script>
-
-</body></html>
